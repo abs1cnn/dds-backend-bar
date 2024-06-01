@@ -40,12 +40,12 @@ async function CrearBaseSiNoExiste() {
     );
   }
 
-  existe = false;
+  existeArticulos = false;
   sql =
-    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'articulos'";
+  "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'articulos'";
   res = await db.get(sql, []);
-  if (res.contar > 0) existe = true;
-  if (!existe) {
+  if (res.contar > 0) existeArticulos = true;
+  if (!existeArticulos) {
     await db.run(
       `CREATE table articulos( 
               IdArticulo INTEGER PRIMARY KEY AUTOINCREMENT

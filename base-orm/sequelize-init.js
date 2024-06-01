@@ -147,8 +147,109 @@ const articulos = sequelize.define(
   }
 );
 
+const empleados = sequelize.define(
+  "empleados",
+  {
+    IdEmpleado: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    Nombre: {
+      type: DataTypes.STRING(60),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Nombre es requerido",
+        },
+      },
+    },
+    Apellido: {
+      type: DataTypes.STRING(60),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Apellido es requerido",
+        },
+      },
+    },
+    FechaAlta: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Fecha Alta es requerido",
+        }
+      }
+    },
+    Activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Activo es requerido",
+        }
+      }
+    },
+  },
+  {
+    // pasar a mayusculas
+    hooks: {
+      beforeValidate: function (empleado, options) {
+        if (typeof empleado.Nombre === "string") {
+          empleado.Nombre = empleado.Nombre.toUpperCase().trim();
+        }
+        if (typeof empleado.Apellido === "string") {
+          empleado.Apellido = empleado.Apellido.toUpperCase().trim();
+        }
+      },
+    },
+
+    timestamps: false,
+  }
+);
+
+// definicion de pedido
+const pedidos = sequelize.define(
+  "pedidos",
+  {
+    IdPedido: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    Fecha: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Fecha Alta es requerido",
+        }
+      }
+    },
+    Monto: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Activo es requerido",
+        }
+      }
+    },
+  },
+);
+
+
 module.exports = {
   sequelize,
   articulosfamilias,
   articulos,
+  empleados,
+  pedidos
 };

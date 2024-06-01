@@ -21,10 +21,18 @@ app.use(express.json()); // para poder leer json en el body
 
 require("./base-orm/sqlite-init");  // crear base si no existe
 
+// talas articulos familia 
 const articulosfamiliasRouter = require("./routes/articulosfamilias");
 app.use(articulosfamiliasRouter);
-
 const articulosRouter = require("./routes/articulos");
 app.use(articulosRouter);
 
+
+// tabla empleados
+const empleadosRouter = require("./routes/empleados");
+app.use(empleadosRouter);
+
+// tabla pedidos
+const pedidosRouter = require("./routes/pedidos");
+app.use(pedidosRouter);
 
