@@ -36,3 +36,12 @@ app.use(empleadosRouter);
 const pedidosRouter = require("./routes/pedidos");
 app.use(pedidosRouter);
 
+//  tabla mesas
+// Import and use routers for mesas and comidas
+const mesasRouter = require("./routes/mesas");
+app.use(mesasRouter);
+
+// tabla comidas
+const comidasRouter = require("./routes/comidas");
+app.use(comidasRouter);
+
