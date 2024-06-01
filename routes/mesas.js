@@ -5,74 +5,74 @@ const router = express.Router();
 let arr_mesas = [
 
   {
-    "id": 1,
-    "sector": "Salon Principal",
-    "ocupada": false,
-    "capacidad": 4,
-    "tipo": "Mesa redonda",
+    "IdMesa": 1,
+    "Sector": "Salon Principal",
+    "Ocupada": false,
+    "Capacidad": 4,
+    "Tipo": "Mesa redonda",
   },
   {
-    "id": 2,
-    "sector": "Salon Principal",
-    "ocupada": true,
-    "capacidad": 2,
-    "tipo": "Mesa cuadrada",
+    "IdMesa": 2,
+    "Sector": "Salon Principal",
+    "Ocupada": true,
+    "Capacidad": 2,
+    "Tipo": "Mesa cuadrada",
   },
   {
-    "id": 3,
-    "sector": "Patio",
-    "ocupada": false,
-    "capacidad": 6,
-    "tipo": "Mesa rectangular",
+    "IdMesa": 3,
+    "Sector": "Patio",
+    "Ocupada": false,
+    "Capacidad": 6,
+    "Tipo": "Mesa rectangular",
   },
   {
-    "id": 4,
-    "sector": "Patio",
-    "ocupada": true,
-    "capacidad": 4,
-    "tipo": "Mesa redonda",
+    "IdMesa": 4,
+    "Sector": "Patio",
+    "Ocupada": true,
+    "Capacidad": 4,
+    "Tipo": "Mesa redonda",
   },
   {
-    "id": 5,
-    "sector": "Terraza",
-    "ocupada": false,
-    "capacidad": 8,
-    "tipo": "Mesa rectangular",
+    "IdMesa": 5,
+    "Sector": "Terraza",
+    "Ocupada": false,
+    "Capacidad": 8,
+    "Tipo": "Mesa rectangular",
   },
   {
-    "id": 6,
-    "sector": "Ventanal",
-    "ocupada": true,
-    "capacidad": 4,
-    "tipo": "Mesa rectangular",
+    "IdMesa": 6,
+    "Sector": "Ventanal",
+    "Ocupada": true,
+    "Capacidad": 4,
+    "Tipo": "Mesa rectangular",
   },
   {
-    "id": 7,
-    "sector": "Ventanal",
-    "ocupada": false,
-    "capacidad": 6,
-    "tipo": "Mesa rectangular",
+    "IdMesa": 7,
+    "Sector": "Ventanal",
+    "Ocupada": false,
+    "Capacidad": 6,
+    "Tipo": "Mesa rectangular",
   },
   {
-    "id": 8,
-    "sector": "Ventanal",
-    "ocupada": false,
-    "capacidad": 10,
-    "tipo": "Mesa ejecutiva",
+    "IdMesa": 8,
+    "Sector": "Ventanal",
+    "Ocupada": false,
+    "Capacidad": 10,
+    "Tipo": "Mesa ejecutiva",
   },
   {
-    "id": 9,
-    "sector": "Salon secundario",
-    "ocupada": true,
-    "capacidad": 20,
-    "tipo": "Mesa ejecutiva",
+    "IdMesa": 9,
+    "Sector": "Salon secundario",
+    "Ocupada": true,
+    "Capacidad": 20,
+    "Tipo": "Mesa ejecutiva",
   },
   {
-    "id": 10,
-    "sector": "Salon secundario",
-    "ocupada": false,
-    "capacidad": 30,
-    "tipo": "Mesa ejecutiva",
+    "IdMesa": 10,
+    "Sector": "Salon secundario",
+    "Ocupada": false,
+    "Capacidad": 30,
+    "Tipo": "Mesa ejecutiva",
   },
 ];    
 
@@ -84,7 +84,7 @@ router.get('/api/mesas', async function (req, res) {
 // busca por id
 router.get('/api/mesas/:id', async function (req, res) {
   let mesas = arr_mesas.find(
-    (x) => x.id== req.params.id
+    (x) => x.IdMesa== req.params.id
   );
   if (mesas) res.json(mesas);
   else res.status(404).json({ message: 'empleados no encontrado' });
@@ -93,12 +93,12 @@ router.get('/api/mesas/:id', async function (req, res) {
 // borra por id
 router.delete('/api/mesas/:id', (req, res) => {
   let mesas = arr_mesas.find(
-    (x) => x.id == req.params.id
+    (x) => x.IdMesa == req.params.id
   );
 
   if (mesas) {
     arr_mesas = arr_mesas.filter(
-      (x) => x.id != req.params.id
+      (x) => x.IdMesa != req.params.id
     );
     res.json({ message: 'empleados eliminado' });
   } else {
@@ -109,20 +109,20 @@ router.delete('/api/mesas/:id', (req, res) => {
 
 // Ruta para manejar la solicitud POST y agregar una nueva mesa
 router.post('/api/mesas/', (req, res) => {
-  const { sector, ocupada, capacidad, tipo } = req.body;
+  const { Sector, Ocupada, Capacidad, Tipo } = req.body;
 
   // Validar que todos los campos requeridos están presentes
-  if (!sector || ocupada === undefined || !capacidad || !tipo) {
+  if (!Sector || Ocupada === undefined || !Capacidad || !Tipo) {
     return res.status(400).json({ error: 'Todos los campos son requeridos' });
   }
 
   // Crear un nuevo objeto con un ID generado aleatoriamente
   let nuevaMesa = {
-    id: Math.floor(Math.random() * 100000),
-    sector,
-    ocupada,
-    capacidad,
-    tipo
+    IdMesa: Math.floor(Math.random() * 100000),
+    Sector,
+    Ocupada,
+    Capacidad,
+    Tipo
   };
 
   // Agregar el nuevo objeto al array arr_mesas
@@ -135,10 +135,10 @@ router.post('/api/mesas/', (req, res) => {
 // Actualizar una mesa por ID
 router.put('/api/mesas/:id', (req, res) => {
   const { id } = req.params;
-  const { sector, ocupada, capacidad, tipo } = req.body;
+  const { Sector, Ocupada, Capacidad, Tipo } = req.body;
 
   // Encontrar la mesa correspondiente por su ID
-  const mesa = arr_mesas.find(m => m.id == id);
+  const mesa = arr_mesas.find(m => m.IdMesa == id);
 
   // Si la mesa no existe, responder con un mensaje de error
   if (!mesa) {
@@ -146,10 +146,10 @@ router.put('/api/mesas/:id', (req, res) => {
   }
 
   // Actualizar los campos de la mesa con los nuevos valores, si se proporcionan
-  if (sector) mesa.sector = sector;
-  if (ocupada !== undefined) mesa.ocupada = ocupada;
-  if (capacidad) mesa.capacidad = capacidad;
-  if (tipo) mesa.tipo = tipo;
+  if (Sector) mesa.Sector = Sector;
+  if (Ocupada !== undefined) mesa.Ocupada = Ocupada;
+  if (Capacidad) mesa.Capacidad = Capacidad;
+  if (Tipo) mesa.Tipo = Tipo;
 
   // Responder con la mesa actualizada
   res.json(mesa);
