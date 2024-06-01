@@ -89,7 +89,7 @@ router.post('/api/empleados/', (req, res) => {
 });
 
 
-router.get('/api/empleados:id', async function (req, res) {
+router.get('/api/empleados/:id', async function (req, res) {
   let empleados = arr_Empleados.find(
     (x) => x.IdEmpleado == req.params.id
   );

@@ -147,6 +147,8 @@ const articulos = sequelize.define(
   }
 );
 
+// --------------------------------------------
+// --------------------------------------------
 const empleados = sequelize.define(
   "empleados",
   {
@@ -244,7 +246,8 @@ const pedidos = sequelize.define(
     },
   },
 );
-
+// --------------------------------------------
+// --------------------------------------------
 
 module.exports = {
   sequelize,
