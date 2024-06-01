@@ -3,61 +3,75 @@ const router = express.Router();
 // Simulamos la base de datos de la carta del bar
 let arr_cartas = [
   {
-    id: 1,
-    nombre: "Papas Fritas",
-    descripcion: "Papas fritas crocantes, perfectas para compartir.",
-    precio: 500,
-    categoria: "Entradas",
+    "id": 1,
+    "nombre": "Papas Fritas",
+    "descripcion": "Papas fritas crocantes, perfectas para compartir.",
+    "precio": 500,
+    "categoria": "Entradas"
   },
   {
-    id: 2,
-    nombre: "Empanadas de Carne",
-    descripcion: "Empanadas caseras de carne cortada a cuchillo.",
-    precio: 600,
-    categoria: "Entradas",
+    "id": 2,
+    "nombre": "Empanadas de Carne",
+    "descripcion": "Empanadas caseras de carne cortada a cuchillo.",
+    "precio": 600,
+    "categoria": "Entradas"
   },
   {
-    id: 3,
-    nombre: "Hamburguesa Clásica",
-    descripcion: "Hamburguesa de carne con cheddar, tomate, lechuga y cebolla.",
-    precio: 800,
-    categoria: "Platos Principales",
+    "id": 3,
+    "nombre": "Hamburguesa Clásica",
+    "descripcion": "Hamburguesa de carne con cheddar, tomate, lechuga y cebolla.",
+    "precio": 800,
+    "categoria": "Platos Principales"
   },
   {
-    id: 4,
-    nombre: "Milanesa Napolitana",
-    descripcion: "Milanesa de carne con salsa napolitana, queso mozzarella y papas fritas.",
-    precio: 900,
-    categoria: "Platos Principales",
+    "id": 4,
+    "nombre": "Milanesa Napolitana",
+    "descripcion": "Milanesa de carne con salsa napolitana, queso mozzarella y papas fritas.",
+    "precio": 900,
+    "categoria": "Platos Principales"
   },
   {
-    id: 5,
-    nombre: "Pizza Muzzarella",
-    descripcion: "Pizza clásica con mozzarella.",
-    precio: 750,
-    categoria: "Pizzas",
+    "id": 5,
+    "nombre": "Pizza Muzzarella",
+    "descripcion": "Pizza clásica con mozzarella.",
+    "precio": 750,
+    "categoria": "Pizzas"
   },
   {
-    id: 6,
-    nombre: "Pizza Cuatro Quesos",
-    descripcion: "Pizza con mozzarella, provolone, cheddar y roquefort.",
-    precio: 850,
-    categoria: "Pizzas",
+    "id": 6,
+    "nombre": "Pizza Cuatro Quesos",
+    "descripcion": "Pizza con mozzarella, provolone, cheddar y roquefort.",
+    "precio": 850,
+    "categoria": "Pizzas"
   },
   {
-    id: 7,
-    nombre: "Fernet con Coca",
-    descripcion: "Fernet Branca con Coca-Cola.",
-    precio: 450,
-    categoria: "Bebidas",
+    "id": 7,
+    "nombre": "Fernet con Coca",
+    "descripcion": "Fernet Branca con Coca-Cola.",
+    "precio": 450,
+    "categoria": "Bebidas"
   },
   {
-    id: 8,
-    nombre: "Gin Tonic",
-    descripcion: "Gin con tónica y limón.",
-    precio: 500,
-    categoria: "Bebidas",
+    "id": 8,
+    "nombre": "Gin Tonic",
+    "descripcion": "Gin con tónica y limón.",
+    "precio": 500,
+    "categoria": "Bebidas"
   },
+  {
+    "id": 9,
+    "nombre": "Malibu",
+    "descripcion": "Malibu y refresco.",
+    "precio": 550,
+    "categoria": "Bebidas"
+  },
+  {
+    "id": 10,
+    "nombre": "Pizza Peras Azules",
+    "descripcion": "Pizza con mozzarella, roquefort y peras.",
+    "precio": 1050,
+    "categoria": "Pizzas"
+  }
 ];
 
 router.get('/api/carta', async function (req, res) {

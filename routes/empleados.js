@@ -106,11 +106,14 @@ router.delete('/api/empleados/:id', (req, res) => {
 });
 
 
-router.post('/api/empleados/', (req, res) => {
+router.post('/api/empleados', (req, res) => {
   const { Nombre, Apellido, FechaAlta, Activo } = req.body;
+
+  console.log("Body de la solicitud:", req.body);
 
   // Validar que todos los campos requeridos están presentes
   if (!Nombre || !Apellido || !FechaAlta || Activo === undefined) {
+    console.log("Campos requeridos no presentes");
     return res.status(400).json({ error: 'Todos los campos son requeridos' });
   }
 
@@ -123,8 +126,10 @@ router.post('/api/empleados/', (req, res) => {
     Activo
   };
 
-  // Agregar el nuevo objeto al array arr_empleados
-  arr_empleados.push(nuevoEmpleado);
+  console.log("Nuevo empleado a agregar:", nuevoEmpleado);
+
+  // Agregar el nuevo objeto al array arr_Empleados
+  arr_Empleados.push(nuevoEmpleado);
 
   // Responder con el nuevo objeto creado y un estado 201 (creado)
   res.status(201).json(nuevoEmpleado);

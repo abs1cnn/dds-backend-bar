@@ -64,41 +64,17 @@ let arr_Pedidos = [
   },
 ];
 
-router.post('/api/pedidos/', (req, res) => {
-  const { Nombre } = req.body;
-  let pedidos = {
-    Nombre,
-    IdEmpleado: Math.floor(Math.random()*100000),
-  };
-
-  // aqui agregar a la coleccion
-  arr_Pedidos.push(pedidos);
-
-  res.status(201).json(pedidos);
+// busca todos los regisros
+router.get('/api/pedidos', async function (req, res) {
+  res.json(arr_Pedidos);
 });
 
-// busca todos los regisros
 router.get('/api/pedidos/:id', async function (req, res) {
   let pedidos = arr_Pedidos.find(
     (x) => x.IdPedido == req.params.id
   );
   if (pedidos) res.json(pedidos);
   else res.status(404).json({ message: 'empleados no encontrado' });
-});
-
-// busca por id
-router.put('/api/pedidos/:id', (req, res) => {
-  let pedidos = arr_Pedidos.find(
-    (x) => x.IdPedido == req.params.id
-  );
-
-  if (pedidos) {
-    const { Nombre } = req.body;
-    pedidos.Nombre = Nombre;
-    res.json({ message: 'empleados actualizado' });
-  } else {
-    res.status(404).json({ message: 'empleados no encontrado' })
-  }
 });
 
 // borra por id
@@ -118,16 +94,15 @@ router.delete('/api/pedidos/:id', (req, res) => {
 });
 
 
-router.get('/api/pedidos', async function (req, res) {
-  res.json(arr_Pedidos);
-
-
 // Ruta para manejar la solicitud POST y agregar un nuevo pedido
-router.post('/api/pedidos/', (req, res) => {
+router.post('/api/pedidos', (req, res) => {
   const { Fecha, Monto, IdEmpleado } = req.body;
+
+  console.log("Body de la solicitud:", req.body);
 
   // Validar que todos los campos requeridos están presentes
   if (!Fecha || !Monto || !IdEmpleado) {
+    console.log("Campos requeridos no presentes");
     return res.status(400).json({ error: 'Todos los campos son requeridos' });
   }
 
@@ -139,13 +114,14 @@ router.post('/api/pedidos/', (req, res) => {
     IdEmpleado
   };
 
+
+  console.log("Nuevo empleado a agregar:", nuevoPedido);
   // Agregar el nuevo objeto al array arr_pedidos
-  arr_pedidos.push(nuevoPedido);
+  arr_Pedidos.push(nuevoPedido);
 
   // Responder con el nuevo objeto creado y un estado 201 (creado)
   res.status(201).json(nuevoPedido);
 });
 
 
-});
 module.exports = router;
