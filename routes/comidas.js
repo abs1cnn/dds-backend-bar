@@ -127,4 +127,27 @@ router.post('/api/carta/', (req, res) => {
   res.status(201).json(nuevoElemento);
 });
 
+// Actualizar un elemento de la carta por ID
+router.put('/api/carta/:id', (req, res) => {
+  const { id } = req.params;
+  const { nombre, descripcion, precio, categoria } = req.body;
+
+  // Encontrar el elemento correspondiente por su ID
+  const elemento = arr_cartas.find(item => item.id == id);
+
+  // Si el elemento no existe, responder con un mensaje de error
+  if (!elemento) {
+    return res.status(404).json({ message: 'Elemento de la carta no encontrado' });
+  }
+
+  // Actualizar los campos del elemento con los nuevos valores, si se proporcionan
+  if (nombre) elemento.nombre = nombre;
+  if (descripcion) elemento.descripcion = descripcion;
+  if (precio) elemento.precio = precio;
+  if (categoria) elemento.categoria = categoria;
+
+  // Responder con el elemento actualizado
+  res.json(elemento);
+});
+
 module.exports = router;

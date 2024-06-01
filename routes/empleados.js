@@ -135,4 +135,27 @@ router.post('/api/empleados', (req, res) => {
   res.status(201).json(nuevoEmpleado);
 });
 
+// Actualizar un empleado por ID
+router.put('/api/empleados/:id', (req, res) => {
+  const { id } = req.params;
+  const { Nombre, Apellido, FechaAlta, Activo } = req.body;
+
+  // Encontrar el empleado correspondiente por su ID
+  const empleado = arr_Empleados.find(emp => emp.IdEmpleado == id);
+
+  // Si el empleado no existe, responder con un mensaje de error
+  if (!empleado) {
+    return res.status(404).json({ message: 'Empleado no encontrado' });
+  }
+
+  // Actualizar los campos del empleado con los nuevos valores, si se proporcionan
+  if (Nombre) empleado.Nombre = Nombre;
+  if (Apellido) empleado.Apellido = Apellido;
+  if (FechaAlta) empleado.FechaAlta = FechaAlta;
+  if (Activo !== undefined) empleado.Activo = Activo;
+
+  // Responder con el empleado actualizado
+  res.json(empleado);
+});
+
 module.exports = router;

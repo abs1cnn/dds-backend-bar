@@ -132,4 +132,27 @@ router.post('/api/mesas/', (req, res) => {
   res.status(201).json(nuevaMesa);
 });
 
+// Actualizar una mesa por ID
+router.put('/api/mesas/:id', (req, res) => {
+  const { id } = req.params;
+  const { sector, ocupada, capacidad, tipo } = req.body;
+
+  // Encontrar la mesa correspondiente por su ID
+  const mesa = arr_mesas.find(m => m.id == id);
+
+  // Si la mesa no existe, responder con un mensaje de error
+  if (!mesa) {
+    return res.status(404).json({ message: 'Mesa no encontrada' });
+  }
+
+  // Actualizar los campos de la mesa con los nuevos valores, si se proporcionan
+  if (sector) mesa.sector = sector;
+  if (ocupada !== undefined) mesa.ocupada = ocupada;
+  if (capacidad) mesa.capacidad = capacidad;
+  if (tipo) mesa.tipo = tipo;
+
+  // Responder con la mesa actualizada
+  res.json(mesa);
+});
+
 module.exports = router;

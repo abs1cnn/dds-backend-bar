@@ -123,5 +123,26 @@ router.post('/api/pedidos', (req, res) => {
   res.status(201).json(nuevoPedido);
 });
 
+// Actualizar un pedido por ID
+router.put('/api/pedidos/:id', (req, res) => {
+  const { id } = req.params;
+  const { Fecha, Monto, IdEmpleado } = req.body;
+
+  // Encontrar el pedido correspondiente por su ID
+  const pedido = arr_Pedidos.find(p => p.IdPedido == id);
+
+  // Si el pedido no existe, responder con un mensaje de error
+  if (!pedido) {
+    return res.status(404).json({ message: 'Pedido no encontrado' });
+  }
+
+  // Actualizar los campos del pedido con los nuevos valores, si se proporcionan
+  if (Fecha) pedido.Fecha = Fecha;
+  if (Monto) pedido.Monto = Monto;
+  if (IdEmpleado) pedido.IdEmpleado = IdEmpleado;
+
+  // Responder con el pedido actualizado
+  res.json(pedido);
+});
 
 module.exports = router;
