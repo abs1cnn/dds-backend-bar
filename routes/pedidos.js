@@ -77,7 +77,7 @@ router.post('/api/pedidos/', (req, res) => {
   res.status(201).json(pedidos);
 });
 
-
+// busca todos los regisros
 router.get('/api/pedidos/:id', async function (req, res) {
   let pedidos = arr_Pedidos.find(
     (x) => x.IdPedido == req.params.id
@@ -86,6 +86,7 @@ router.get('/api/pedidos/:id', async function (req, res) {
   else res.status(404).json({ message: 'empleados no encontrado' });
 });
 
+// busca por id
 router.put('/api/pedidos/:id', (req, res) => {
   let pedidos = arr_Pedidos.find(
     (x) => x.IdPedido == req.params.id
@@ -100,6 +101,7 @@ router.put('/api/pedidos/:id', (req, res) => {
   }
 });
 
+// borra por id
 router.delete('/api/pedidos/:id', (req, res) => {
   let pedidos = arr_Pedidos.find(
     (x) => x.IdPedido == req.params.id
@@ -118,5 +120,32 @@ router.delete('/api/pedidos/:id', (req, res) => {
 
 router.get('/api/pedidos', async function (req, res) {
   res.json(arr_Pedidos);
+
+
+// Ruta para manejar la solicitud POST y agregar un nuevo pedido
+router.post('/api/pedidos/', (req, res) => {
+  const { Fecha, Monto, IdEmpleado } = req.body;
+
+  // Validar que todos los campos requeridos están presentes
+  if (!Fecha || !Monto || !IdEmpleado) {
+    return res.status(400).json({ error: 'Todos los campos son requeridos' });
+  }
+
+  // Crear un nuevo objeto con un ID generado aleatoriamente
+  let nuevoPedido = {
+    IdPedido: Math.floor(Math.random() * 100000),
+    Fecha,
+    Monto,
+    IdEmpleado
+  };
+
+  // Agregar el nuevo objeto al array arr_pedidos
+  arr_pedidos.push(nuevoPedido);
+
+  // Responder con el nuevo objeto creado y un estado 201 (creado)
+  res.status(201).json(nuevoPedido);
+});
+
+
 });
 module.exports = router;

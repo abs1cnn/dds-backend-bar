@@ -64,19 +64,6 @@ router.get('/api/carta', async function (req, res) {
   res.json(arr_cartas);
 });
 
-// router.post('/api/empleados/', (req, res) => {
-//   const { Nombre } = req.body;
-//   let empleados = {
-//     Nombre,
-//     IdEmpleado: Math.floor(Math.random()*100000),
-//   };
-
-//   // aqui agregar a la coleccion
-//   arr_Empleados.push(empleados);
-
-//   res.status(201).json(empleados);
-// });
-
 
 router.get('/api/carta/:id', async function (req, res) {
   let carta = arr_cartas.find(
@@ -100,6 +87,30 @@ router.delete('/api/carta/:id', (req, res) => {
   } else {
     res.status(404).json({ message: 'empleados no encontrado' })
   }
+});
+
+router.post('/api/carta/', (req, res) => {
+  const { nombre, descripcion, precio, categoria } = req.body;
+
+  // Validar que todos los campos requeridos están presentes
+  if (!nombre || !descripcion || !precio || !categoria) {
+    return res.status(400).json({ error: 'Todos los campos son requeridos' });
+  }
+
+  // Crear un nuevo objeto con un ID generado aleatoriamente
+  let nuevoElemento = {
+    id: Math.floor(Math.random() * 100000),
+    nombre,
+    descripcion,
+    precio,
+    categoria
+  };
+
+  // Agregar el nuevo objeto al array arr_carta
+  arr_cartas.push(nuevoElemento);
+
+  // Responder con el nuevo objeto creado y un estado 201 (creado)
+  res.status(201).json(nuevoElemento);
 });
 
 module.exports = router;

@@ -41,10 +41,12 @@ let arr_mesas = [
   },
 ];    
 
+// busca todos los regisros
 router.get('/api/mesas', async function (req, res) {
   res.json(arr_mesas);
 });
 
+// busca por id
 router.get('/api/mesas/:id', async function (req, res) {
   let mesas = arr_mesas.find(
     (x) => x.id== req.params.id
@@ -53,7 +55,7 @@ router.get('/api/mesas/:id', async function (req, res) {
   else res.status(404).json({ message: 'empleados no encontrado' });
 });
 
-
+// borra por id
 router.delete('/api/mesas/:id', (req, res) => {
   let mesas = arr_mesas.find(
     (x) => x.id == req.params.id
@@ -69,5 +71,30 @@ router.delete('/api/mesas/:id', (req, res) => {
   }
 });
 
+
+// Ruta para manejar la solicitud POST y agregar una nueva mesa
+router.post('/api/mesas/', (req, res) => {
+  const { sector, ocupada, capacidad, tipo } = req.body;
+
+  // Validar que todos los campos requeridos están presentes
+  if (!sector || ocupada === undefined || !capacidad || !tipo) {
+    return res.status(400).json({ error: 'Todos los campos son requeridos' });
+  }
+
+  // Crear un nuevo objeto con un ID generado aleatoriamente
+  let nuevaMesa = {
+    id: Math.floor(Math.random() * 100000),
+    sector,
+    ocupada,
+    capacidad,
+    tipo
+  };
+
+  // Agregar el nuevo objeto al array arr_mesas
+  arr_mesas.push(nuevaMesa);
+
+  // Responder con el nuevo objeto creado y un estado 201 (creado)
+  res.status(201).json(nuevaMesa);
+});
 
 module.exports = router;
