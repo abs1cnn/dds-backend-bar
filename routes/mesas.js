@@ -39,50 +39,33 @@ let arr_mesas = [
     capacidad: 8,
     tipo: 'Mesa rectangular',
   },
-];         
+];    
 
 router.get('/api/mesas', async function (req, res) {
   res.json(arr_mesas);
 });
 
 router.get('/api/mesas/:id', async function (req, res) {
-  const id = parseInt(req.params.id);
-  const itemMesa = arr_mesas.find(item => item.id === id);
-
-  if (!itemMesa) {
-    res.status(404).json({ message: 'Item no encontrado' });
-    return;
-  }
-
-  res.json(itemMesa);
-});
-
-router.put('/api/mesas/:id', (req, res) => {
   let mesas = arr_mesas.find(
-    (x) => x.NroMesa == req.params.id
+    (x) => x.id== req.params.id
   );
-
-  if (mesas) {
-    const { Nombre } = req.body;
-    mesas.Nombre = Nombre;
-    res.json({ message: 'mesa actualizado' });
-  } else {
-    res.status(404).json({ message: 'mesa no encontrado' })
-  }
+  if (mesas) res.json(mesas);
+  else res.status(404).json({ message: 'empleados no encontrado' });
 });
 
-router.delete('/api/mesas/:nro', (req, res) => {
+
+router.delete('/api/mesas/:id', (req, res) => {
   let mesas = arr_mesas.find(
-    (x) => x.NroMesa == req.params.id
+    (x) => x.id == req.params.id
   );
 
   if (mesas) {
     arr_mesas = arr_mesas.filter(
-      (x) => x.NroMesa != req.params.id
+      (x) => x.id != req.params.id
     );
-    res.json({ message: 'mesa eliminada' });
+    res.json({ message: 'empleados eliminado' });
   } else {
-    res.status(404).json({ message: 'mesa no encontrado' })
+    res.status(404).json({ message: 'empleados no encontrado' })
   }
 });
 

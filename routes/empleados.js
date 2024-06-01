@@ -75,18 +75,22 @@ let arr_Empleados = [
   
 ];
 
-router.post('/api/empleados/', (req, res) => {
-  const { Nombre } = req.body;
-  let empleados = {
-    Nombre,
-    IdEmpleado: Math.floor(Math.random()*100000),
-  };
-
-  // aqui agregar a la coleccion
-  arr_Empleados.push(empleados);
-
-  res.status(201).json(empleados);
+router.get('/api/empleados', async function (req, res) {
+  res.json(arr_Empleados);
 });
+
+// router.post('/api/empleados/', (req, res) => {
+//   const { Nombre } = req.body;
+//   let empleados = {
+//     Nombre,
+//     IdEmpleado: Math.floor(Math.random()*100000),
+//   };
+
+//   // aqui agregar a la coleccion
+//   arr_Empleados.push(empleados);
+
+//   res.status(201).json(empleados);
+// });
 
 
 router.get('/api/empleados/:id', async function (req, res) {
@@ -126,8 +130,4 @@ router.delete('/api/empleados/:id', (req, res) => {
   }
 });
 
-
-router.get('/api/empleados', async function (req, res) {
-  res.json(arr_Empleados);
-});
 module.exports = router;
