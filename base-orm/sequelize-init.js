@@ -199,7 +199,8 @@ const articulosEmpleados = sequelize.define(
         }
       },
     },
-
+    tableName: "empleados",
+    freezeTableName:true,
     timestamps: false,
   }
 );

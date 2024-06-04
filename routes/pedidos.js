@@ -1,148 +1,162 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const db = require("../base-orm/sequelize-init");
+const { Op, ValidationError } = require("sequelize");
 
-let arr_Pedidos = [
-  {
-    "IdPedido": 1,
-    "Fecha": "02/01/2020",
-    "Monto": 21000,
-    "IdEmpleado": 2
-  },
-  {
-    "IdPedido": 2,
-    "Fecha": "2/02/2020",
-    "Monto": 22000,
-    "IdEmpleado": 4
-  },
-  {
-    "IdPedido": 3,
-    "Fecha": "02/03/2020",
-    "Monto": 23000,
-    "IdEmpleado": 6
-  },
-  {
-    "IdPedido": 4,
-    "Fecha": "02/04/2020",
-    "Monto": 31000,
-    "IdEmpleado": 8
-  },
-  {
-    "IdPedido": 5,
-    "Fecha": "2/05/2020",
-    "Monto": 32000,
-    "IdEmpleado": 10
-  },
-  {
-    "IdPedido": 6,
-    "Fecha": "02/06/2020",
-    "Monto": 33000,
-    "IdEmpleado": 1
-  },
-  {
-    "IdPedido": 7,
-    "Fecha": "02/07/2020",
-    "Monto": 77000,
-    "IdEmpleado": 2
-  },
-  {
-    "IdPedido": 8,
-    "Fecha": "2/08/2020",
-    "Monto": 88000,
-    "IdEmpleado": 3
-  },
-  {
-    "IdPedido": 9,
-    "Fecha": "02/09/2020",
-    "Monto": 99000,
-    "IdEmpleado": 1
-  },
-  {
-    "IdPedido": 10,
-    "Fecha": "02/10/2020",
-    "Monto": 10000,
-    "IdEmpleado": 2
-  },
-];
+router.get("/api/pedidos", async function (req, res, next) {
+  // #swagger.tags = ['Pedidos']
+  // #swagger.summary = 'obtiene todos los Pedidos'
+  // consulta de pedidos con filtros y paginación
 
-// busca todos los regisros
-router.get('/api/pedidos', async function (req, res) {
-  res.json(arr_Pedidos);
+  let where = {};
+  if (req.query.FechaAlta != undefined && req.query.FechaAlta !== "") {
+    where.FechaAlta = {
+      [Op.like]: "%" + req.query.FechaAlta + "%",
+    };
+  }
+  if (req.query.IdEmpleado != undefined && req.query.IdEmpleado !== "") {
+    where.IdEmpleado = req.query.IdEmpleado;
+  }
+  const Pagina = req.query.Pagina ?? 1;
+  const TamañoPagina = 10;
+  const { count, rows } = await db.articulosPedidos.findAndCountAll({
+    attributes: [
+      "IdPedido",
+      "FechaAlta",
+      "Precio",
+      "IdEmpleado",
+    ],
+    order: [["FechaAlta", "ASC"]],
+    where,
+    offset: (Pagina - 1) * TamañoPagina,
+    limit: TamañoPagina,
+  });
+
+  return res.json(rows);
 });
 
-router.get('/api/pedidos/:id', async function (req, res) {
-  let pedidos = arr_Pedidos.find(
-    (x) => x.IdPedido == req.params.id
-  );
-  if (pedidos) res.json(pedidos);
-  else res.status(404).json({ message: 'empleados no encontrado' });
+router.get("/api/pedidos/:id", async function (req, res, next) {
+  // #swagger.tags = ['Pedidos']
+  // #swagger.summary = 'obtiene un Pedido'
+  // #swagger.parameters['id'] = { description: 'identificador del Pedido...' }
+  let items = await db.articulosPedidos.findOne({
+    attributes: [
+      "IdPedido",
+      "FechaAlta",
+      "Precio",
+      "IdEmpleado",
+    ],
+    where: { IdPedido: req.params.id },
+  });
+  res.json(items);
 });
 
-// borra por id
-router.delete('/api/pedidos/:id', (req, res) => {
-  let pedidos = arr_Pedidos.find(
-    (x) => x.IdPedido == req.params.id
-  );
+router.post("/api/pedidos/", async (req, res) => {
+  // #swagger.tags = ['Pedidos']
+  // #swagger.summary = 'agrega un Pedido'
+  /*    #swagger.parameters['item'] = {
+                in: 'body',
+                description: 'nuevo Pedido',
+                schema: { $ref: '#/definitions/Pedidos' }
+    } */
+  try {
+    let data = await db.articulosPedidos.create({
+      FechaAlta: req.body.FechaAlta,
+      Precio: req.body.Precio,
+      IdEmpleado: req.body.IdEmpleado,
+    });
+    res.status(200).json(data.dataValues); // devolvemos el registro agregado!
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      // si son errores de validación, los devolvemos
+      let messages = '';
+      err.errors.forEach((x) => messages += (x.path ?? 'campo') + ": " + x.message + '\n');
+      res.status(400).json({message : messages});
+    } else {
+      // si son errores desconocidos, los dejamos que los controle el middleware de errores
+      throw err;
+    }
+  }
+});
 
-  if (pedidos) {
-    arr_Pedidos = arr_Pedidos.filter(
-      (x) => x.IdPedido != req.params.id
-    );
-    res.json({ message: 'pedido eliminado' });
+router.put("/api/pedidos/:id", async (req, res) => {
+  // #swagger.tags = ['Pedidos']
+  // #swagger.summary = 'actualiza un Pedido'
+  // #swagger.parameters['id'] = { description: 'identificador del Pedido...' }
+  /*    #swagger.parameters['Pedido'] = {
+                in: 'body',
+                description: 'Pedido a actualizar',
+                schema: { $ref: '#/definitions/Pedidos' }
+    } */
+
+  try {
+    let item = await db.articulosPedidos.findOne({
+      attributes: [
+        "IdPedido",
+        "FechaAlta",
+        "Precio",
+        "IdEmpleado",
+      ],
+      where: { IdPedido: req.params.id },
+    });
+    if (!item) {
+      res.status(404).json({ message: "Pedido no encontrado" });
+      return;
+    }
+    item.FechaAlta = req.body.FechaAlta;
+    item.Precio = req.body.Precio;
+    item.IdEmpleado = req.body.IdEmpleado;
+    await item.save();
+
+    res.sendStatus(204);
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      // si son errores de validación, los devolvemos
+      let messages = '';
+      err.errors.forEach((x) => messages += x.path + ": " + x.message + '\n');
+      res.status(400).json({message : messages});
+    } else {
+      // si son errores desconocidos, los dejamos que los controle el middleware de errores
+      throw err;
+    }
+  }
+});
+
+router.delete("/api/pedidos/:id", async (req, res) => {
+  // #swagger.tags = ['Pedidos']
+  // #swagger.summary = 'elimina un Pedido'
+  // #swagger.parameters['id'] = { description: 'identificador del Pedido..' }
+
+  let bajaFisica = false;
+
+  if (bajaFisica) {
+    // baja física
+    let filasBorradas = await db.articulosPedidos.destroy({
+      where: { IdPedido: req.params.id },
+    });
+    if (filasBorradas == 1) res.sendStatus(200);
+    else res.sendStatus(404);
   } else {
-    res.status(404).json({ message: 'pedido no encontrado' })
+    // baja lógica
+    try {
+      let data = await db.sequelize.query(
+        "UPDATE pedidos SET Activo = case when Activo = 1 then 0 else 1 end WHERE IdPedido = :IdPedido",
+        {
+          replacements: { IdPedido: +req.params.id },
+        }
+      );
+      res.sendStatus(200);
+    } catch (err) {
+      if (err instanceof ValidationError) {
+        // si son errores de validación, los devolvemos
+        const messages = err.errors.map((x) => x.message);
+        res.status(400).json(messages);
+      } else {
+        // si son errores desconocidos, los dejamos que los controle el middleware de errores
+        throw err;
+      }
+    }
   }
-});
-
-
-// Ruta para manejar la solicitud POST y agregar un nuevo pedido
-router.post('/api/pedidos', (req, res) => {
-  const { Fecha, Monto, IdEmpleado } = req.body;
-
-  console.log("Body de la solicitud:", req.body);
-
-  // Validar que todos los campos requeridos están presentes
-  if (!Fecha || !Monto || !IdEmpleado) {
-    console.log("Campos requeridos no presentes");
-    return res.status(400).json({ error: 'Todos los campos son requeridos' });
-  }
-
-  // Crear un nuevo objeto con un ID generado aleatoriamente
-  let nuevoPedido = {
-    IdPedido: Math.floor(Math.random() * 100000),
-    Fecha,
-    Monto,
-    IdEmpleado
-  };
-
-
-  console.log("Nuevo empleado a agregar:", nuevoPedido);
-  // Agregar el nuevo objeto al array arr_pedidos
-  arr_Pedidos.push(nuevoPedido);
-
-  // Responder con el nuevo objeto creado y un estado 201 (creado)
-  res.status(201).json(nuevoPedido);
-});
-
-// Actualizar un pedido por ID
-router.put('/api/pedidos/:id', (req, res) => {
-  const { id } = req.params;
-  const { Fecha, Monto, IdEmpleado } = req.body;
-
-  // Encontrar el pedido correspondiente por su ID
-  const pedido = arr_Pedidos.find(p => p.IdPedido == id);
-
-  // Si el pedido no existe, responder con un mensaje de error
-  if (!pedido) {
-    return res.status(404).json({ message: 'Pedido no encontrado' });
-  }
-
-  // Actualizar los campos del pedido con los nuevos valores, si se proporcionan
-  if (Fecha) pedido.Fecha = Fecha;
-  if (Monto) pedido.Monto = Monto;
-  if (IdEmpleado) pedido.IdEmpleado = IdEmpleado;
-
-  // Responder con el pedido actualizado
-  res.json(pedido);
 });
 
 module.exports = router;

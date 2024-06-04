@@ -146,6 +146,78 @@ async function CrearBaseSiNoExiste() {
         ('Pizza Peras Azules', 'Pizza con mozzarella, roquefort y peras.', 1050, 'Pizzas');`
       );
     }
+
+    // --------------------------------------------------------
+    // Definición pedidos table
+    // --------------------------------------------------------
+
+    let existePedidos = false;
+    res = await db.get(
+      "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'pedidos'",
+      []
+    );
+    if (res.contar > 0) existePedidos = true;
+    if (!existePedidos) {
+      await db.run(
+        `CREATE TABLE pedidos (
+          IdPedido INTEGER PRIMARY KEY AUTOINCREMENT,
+          FechaAlta TEXT NOT NULL CHECK(trim(FechaAlta) == FechaAlta),
+          Precio DECIMAL(10, 2) NOT NULL,
+          IdEmpleado INTEGER NOT NULL CHECK(trim(IdEmpleado) == IdEmpleado)
+        );`
+      );
+      console.log("tabla pedidos creada!");
+      await db.run(
+        `INSERT INTO pedidos (FechaAlta, Precio, IdEmpleado) VALUES
+        ('02/01/2020', 21000.00, 2),
+        ('02/02/2020', 22000.00, 4),
+        ('02/03/2020', 23000.00, 6),
+        ('02/04/2020', 31000.00, 8),
+        ('02/05/2020', 32000.00, 10),
+        ('02/06/2020', 33000.00, 1),
+        ('02/07/2020', 77000.00, 2),
+        ('02/08/2020', 88000.00, 3),
+        ('02/09/2020', 99000.00, 1),
+        ('02/10/2020', 10000.00, 2);`
+      );
+    }
+
+    // --------------------------------------------------------
+    // Definición mesas table
+    // --------------------------------------------------------
+
+    let existeMesas = false;
+    res = await db.get(
+      "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'mesas'",
+      []
+    );
+    if (res.contar > 0) existeMesas = true;
+    if (!existeMesas) {
+      await db.run(
+        `CREATE TABLE mesas (
+          IdMesa INTEGER PRIMARY KEY AUTOINCREMENT,
+          Sector TEXT NOT NULL CHECK(length(Sector) >= 3 AND length(Sector) <= 30 AND trim(Sector) == Sector),
+          Capacidad INTEGER NOT NULL,
+          Tipo TEXT NOT NULL CHECK(length(Tipo) >= 3 AND length(Tipo) <= 30 AND trim(Tipo) == Tipo),
+          Ocupada BOOLEAN NOT NULL
+        );`
+      );
+      console.log("tabla mesas creada!");
+      await db.run(
+        `INSERT INTO mesas (Sector, Capacidad, Tipo, Ocupada) VALUES
+        ('Salon Principal', 4, 'Mesa redonda', 0),
+        ('Salon Principal', 2, 'Mesa cuadrada', 1),
+        ('Patio', 6, 'Mesa rectangular', 0),
+        ('Patio', 4, 'Mesa redonda', 1),
+        ('Terraza', 8, 'Mesa rectangular', 0),
+        ('Ventanal', 4, 'Mesa rectangular', 1),
+        ('Ventanal', 6, 'Mesa rectangular', 0),
+        ('Ventanal', 10, 'Mesa ejecutiva', 0),
+        ('Salon secundario', 20, 'Mesa ejecutiva', 1),
+        ('Salon secundario', 30, 'Mesa ejecutiva', 0);`
+      );
+    }
+    
     // --------------------------------------------------
     // --------------------------------------------------
     // Cerrar la base
