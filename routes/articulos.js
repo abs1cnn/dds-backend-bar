@@ -1,3 +1,6 @@
+
+// esto se borrara
+
 const express = require("express");
 const router = express.Router();
 const db = require("../base-orm/sequelize-init");
