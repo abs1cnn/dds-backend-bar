@@ -278,6 +278,127 @@ const articulosComidas = sequelize.define(
   }
 );
 
+// -------------------------------------------------------
+// -------------------------------------------------------
+// definicion del modelo de datos Mesas
+const articulosMesas = sequelize.define(
+  "articulosMesas",
+  {
+    IdMesa: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    Sector: {
+      // todo evitar que string autocomplete con espacios en blanco, debería ser varchar sin espacios
+      type: DataTypes.STRING(30),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Sector es requerido",
+        },
+        len: {
+          args: [3, 30],
+          msg: "Sector debe ser tipo caracteres, entre 5 y 30 de longitud",
+        },
+      },
+    },
+    Capacidad: {
+      type: DataTypes.INTEGER(10, 2),
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Capacidad es requerido",
+        }
+      }
+    },
+    Tipo: {
+      // todo evitar que string autocomplete con espacios en blanco, debería ser varchar sin espacios
+      type: DataTypes.STRING(30),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Tipo es requerido",
+        },
+      },
+    },
+  },
+  {
+    // pasar a mayusculas
+    hooks: {
+      beforeValidate: function (articulosMesas, options) {
+        if (typeof articulosMesas.Nombre === "string") {
+          articulosMesas.Nombre = articulosMesas.Nombre.toUpperCase().trim();
+        }
+      },
+    },
+    tableName: "mesas",
+    freezeTableName:true,
+    timestamps: false,
+  }
+);
+
+// -------------------------------------------------------
+// -------------------------------------------------------
+// definicion del modelo de datos Pedidos
+const articulosPedidos = sequelize.define(
+  "articulosPedidos",
+  {
+    IdPedido: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    FechaAlta: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Fecha Alta es requerido",
+        }
+      }
+    },
+    Precio: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "Precio es requerido",
+        }
+      }
+    },
+    IdEmpleado: {
+      // todo evitar que string autocomplete con espacios en blanco, debería ser varchar sin espacios
+      type: DataTypes.INTEGER(),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Id Empleado es requerido",
+        },
+      },
+    },
+  },
+  {
+    // pasar a mayusculas
+    hooks: {
+      beforeValidate: function (articulosPedidos, options) {
+        if (typeof articulosPedidos.Nombre === "string") {
+          articulosPedidos.Nombre = articulosPedidos.Nombre.toUpperCase().trim();
+        }
+      },
+    },
+    tableName: "pedidos",
+    freezeTableName:true,
+    timestamps: false,
+  }
+);
+
 // --------------------------------------------------------
 // --------------------------------------------------------
 
@@ -287,5 +408,7 @@ module.exports = {
   articulosfamilias,
   articulos,
   articulosEmpleados,
-  articulosComidas
+  articulosComidas,
+  articulosMesas,
+  articulosPedidos
 };
