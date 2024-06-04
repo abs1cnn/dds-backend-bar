@@ -122,16 +122,6 @@ const articulos = sequelize.define(
         }
       }
     },
-    Activo: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: "Activo es requerido",
-        }
-      }
-    },
   },
   {
     // pasar a mayusculas
@@ -147,10 +137,11 @@ const articulos = sequelize.define(
   }
 );
 
-// --------------------------------------------
-// --------------------------------------------
-const empleados = sequelize.define(
-  "empleados",
+// -------------------------------------------------------
+// -------------------------------------------------------
+// definicion del modelo de datos Empleados
+const articulosEmpleados = sequelize.define(
+  "articulosEmpleados",
   {
     IdEmpleado: {
       type: DataTypes.INTEGER,
@@ -158,17 +149,23 @@ const empleados = sequelize.define(
       autoIncrement: true,
     },
     Nombre: {
-      type: DataTypes.STRING(60),
+      // todo evitar que string autocomplete con espacios en blanco, debería ser varchar sin espacios
+      type: DataTypes.STRING(30),
       allowNull: false,
       validate: {
         notEmpty: {
           args: true,
           msg: "Nombre es requerido",
         },
+        len: {
+          args: [3, 30],
+          msg: "Nombre debe ser tipo caracteres, entre 5 y 30 de longitud",
+        },
       },
     },
     Apellido: {
-      type: DataTypes.STRING(60),
+      // todo evitar que string autocomplete con espacios en blanco, debería ser varchar sin espacios
+      type: DataTypes.STRING(30),
       allowNull: false,
       validate: {
         notEmpty: {
@@ -187,26 +184,18 @@ const empleados = sequelize.define(
         }
       }
     },
-    Activo: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      validate: {
-        notNull: {
-          args: true,
-          msg: "Activo es requerido",
-        }
-      }
-    },
   },
   {
     // pasar a mayusculas
     hooks: {
-      beforeValidate: function (empleado, options) {
-        if (typeof empleado.Nombre === "string") {
-          empleado.Nombre = empleado.Nombre.toUpperCase().trim();
+      beforeValidate: function (articulosEmpleados, options) {
+        if (typeof articulosEmpleados.Nombre === "string") {
+          articulosEmpleados.Nombre = articulosEmpleados.Nombre.toUpperCase().trim();
         }
-        if (typeof empleado.Apellido === "string") {
-          empleado.Apellido = empleado.Apellido.toUpperCase().trim();
+      },
+      beforeValidate: function (articulosEmpleados, options) {
+        if (typeof articulosEmpleados.Apellido === "string") {
+          articulosEmpleados.Apellido = articulosEmpleados.Apellido.toUpperCase().trim();
         }
       },
     },
@@ -215,44 +204,88 @@ const empleados = sequelize.define(
   }
 );
 
-// definicion de pedido
-const pedidos = sequelize.define(
-  "pedidos",
+// -------------------------------------------------------
+// -------------------------------------------------------
+// definicion del modelo de datos Comidas
+const articulosComidas = sequelize.define(
+  "articulosComidas",
   {
-    IdPedido: {
+    IdCarta: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    Fecha: {
-      type: DataTypes.STRING,
+    Nombre: {
+      // todo evitar que string autocomplete con espacios en blanco, debería ser varchar sin espacios
+      type: DataTypes.STRING(30),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Nombre es requerido",
+        },
+        len: {
+          args: [3, 30],
+          msg: "Nombre debe ser tipo caracteres, entre 5 y 30 de longitud",
+        },
+      },
+    },
+    Descripcion: {
+      // todo evitar que string autocomplete con espacios en blanco, debería ser varchar sin espacios
+      type: DataTypes.STRING(30),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Descripcion es requerido",
+        },
+      },
+    },
+    Precio: {
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notNull: {
           args: true,
-          msg: "Fecha Alta es requerido",
+          msg: "Precio es requerido",
         }
       }
     },
-    Monto: {
-      type: DataTypes.FLOAT,
+    Categoria: {
+      // todo evitar que string autocomplete con espacios en blanco, debería ser varchar sin espacios
+      type: DataTypes.STRING(30),
       allowNull: false,
       validate: {
-        notNull: {
+        notEmpty: {
           args: true,
-          msg: "Activo es requerido",
-        }
-      }
+          msg: "Categoria es requerido",
+        },
+      },
     },
   },
+  {
+    // pasar a mayusculas
+    hooks: {
+      beforeValidate: function (articulosComidas, options) {
+        if (typeof articulosComidas.Nombre === "string") {
+          articulosComidas.Nombre = articulosComidas.Nombre.toUpperCase().trim();
+        }
+      },
+    },
+    tableName: "cartas",
+    freezeTableName:true,
+    timestamps: false,
+  }
 );
-// --------------------------------------------
-// --------------------------------------------
+
+// --------------------------------------------------------
+// --------------------------------------------------------
+
 
 module.exports = {
   sequelize,
   articulosfamilias,
   articulos,
-  empleados,
-  pedidos
+  articulosEmpleados,
+  articulosComidas
 };
