@@ -16,8 +16,6 @@ router.get("/api/cartas", async function (req, res, next) {
     };
   }
 
-  const Pagina = req.query.Pagina ?? 1;
-  const TamañoPagina = 10;
   const { count, rows } = await db.articulosComidas.findAndCountAll({
     attributes: [
       "IdCarta",
@@ -28,8 +26,6 @@ router.get("/api/cartas", async function (req, res, next) {
     ],
     order: [["Nombre", "ASC"]],
     where,
-    offset: (Pagina - 1) * TamañoPagina,
-    limit: TamañoPagina,
   });
 
   return res.json(rows);

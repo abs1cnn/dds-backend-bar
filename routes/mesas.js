@@ -19,8 +19,6 @@ router.get("/api/mesas", async function (req, res, next) {
     // convertir el string a booleano
     where.Ocupada = req.query.Ocupada === "true";
   }
-  const Pagina = req.query.Pagina ?? 1;
-  const TamañoPagina = 10;
   const { count, rows } = await db.articulosMesas.findAndCountAll({
     attributes: [
       "IdMesa",
@@ -31,8 +29,6 @@ router.get("/api/mesas", async function (req, res, next) {
     ],
     order: [["Sector", "ASC"]],
     where,
-    offset: (Pagina - 1) * TamañoPagina,
-    limit: TamañoPagina,
   });
 
   return res.json(rows);

@@ -5,16 +5,6 @@ const auth = require("../seguridad/auth");
 
 const users = [
   {
-    usuario: "lan",
-    clave: "clave",
-    rol: "admin",
-  },
-  {
-    usuario: "abs",
-    clave: "021001",
-    rol: "admin",
-  },
-  {
     usuario: "admin",
     clave: "123",
     rol: "admin",

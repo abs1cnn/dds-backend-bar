@@ -17,8 +17,7 @@ router.get("/api/pedidos", async function (req, res, next) {
   if (req.query.IdEmpleado != undefined && req.query.IdEmpleado !== "") {
     where.IdEmpleado = req.query.IdEmpleado;
   }
-  const Pagina = req.query.Pagina ?? 1;
-  const TamañoPagina = 10;
+
   const { count, rows } = await db.articulosPedidos.findAndCountAll({
     attributes: [
       "IdPedido",
@@ -28,8 +27,6 @@ router.get("/api/pedidos", async function (req, res, next) {
     ],
     order: [["FechaAlta", "ASC"]],
     where,
-    offset: (Pagina - 1) * TamañoPagina,
-    limit: TamañoPagina,
   });
 
   return res.json(rows);

@@ -104,9 +104,6 @@ async function CrearBaseSiNoExiste() {
         ('Matias', 'Garro', '2004-04-04', 1),
         ('Lan', 'Puchee', '2005-05-05', 0),
         ('Lanfranco', 'Puchetta', '2006-06-06', 1),
-        ('Lucia', 'Cana', '2007-07-07', 0),
-        ('Luciano', 'Canani', '2008-08-08', 1),
-        ('Yaz', 'Cane', '2009-09-09', 0),
         ('Yazmin', 'Canestra', '2010-10-10', 1);`
       );
     }
@@ -141,7 +138,6 @@ async function CrearBaseSiNoExiste() {
         ('Pizza Muzzarella', 'Pizza clásica con mozzarella.', 750, 'Pizzas'),
         ('Pizza Cuatro Quesos', 'Pizza con mozzarella, provolone, cheddar y roquefort.', 850, 'Pizzas'),
         ('Fernet con Coca', 'Fernet Branca con Coca-Cola.', 450, 'Bebidas'),
-        ('Gin Tonic', 'Gin con tónica y limón.', 500, 'Bebidas'),
         ('Malibu', 'Malibu y refresco.', 550, 'Bebidas'),
         ('Pizza Peras Azules', 'Pizza con mozzarella, roquefort y peras.', 1050, 'Pizzas');`
       );
@@ -177,7 +173,6 @@ async function CrearBaseSiNoExiste() {
         ('02/06/2020', 33000.00, 1),
         ('02/07/2020', 77000.00, 2),
         ('02/08/2020', 88000.00, 3),
-        ('02/09/2020', 99000.00, 1),
         ('02/10/2020', 10000.00, 2);`
       );
     }
@@ -199,7 +194,7 @@ async function CrearBaseSiNoExiste() {
           Sector TEXT NOT NULL CHECK(length(Sector) >= 3 AND length(Sector) <= 30 AND trim(Sector) == Sector),
           Capacidad INTEGER NOT NULL,
           Tipo TEXT NOT NULL CHECK(length(Tipo) >= 3 AND length(Tipo) <= 30 AND trim(Tipo) == Tipo),
-          Ocupada BOOLEAN NOT NULL
+          Ocupada BOOLEAN
         );`
       );
       console.log("tabla mesas creada!");
@@ -210,7 +205,6 @@ async function CrearBaseSiNoExiste() {
         ('Patio', 6, 'Mesa rectangular', 0),
         ('Patio', 4, 'Mesa redonda', 1),
         ('Terraza', 8, 'Mesa rectangular', 0),
-        ('Ventanal', 4, 'Mesa rectangular', 1),
         ('Ventanal', 6, 'Mesa rectangular', 0),
         ('Ventanal', 10, 'Mesa ejecutiva', 0),
         ('Salon secundario', 20, 'Mesa ejecutiva', 1),

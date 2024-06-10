@@ -22,6 +22,10 @@ app.use(express.json()); // para poder leer json en el body
 require("./base-orm/sqlite-init");  // crear base si no existe
 
 
+// seguridad
+const seguridadRouter = require("./routes/seguridad");
+app.use(seguridadRouter);
+
 // tabla empleados
 const empleadosRouter = require("./routes/empleados");
 app.use(empleadosRouter);

@@ -1,6 +1,6 @@
 
 // esto se borrara
-
+const auth = require("../seguridad/auth");
 const express = require("express");
 const router = express.Router();
 const db = require("../base-orm/sequelize-init");
@@ -22,8 +22,6 @@ router.get("/api/articulos", async function (req, res, next) {
     // convertir el string a booleano
     where.Activo = req.query.Activo === "true";
   }
-  const Pagina = req.query.Pagina ?? 1;
-  const TamañoPagina = 10;
   const { count, rows } = await db.articulos.findAndCountAll({
     attributes: [
       "IdArticulo",
@@ -35,8 +33,6 @@ router.get("/api/articulos", async function (req, res, next) {
     ],
     order: [["Nombre", "ASC"]],
     where,
-    offset: (Pagina - 1) * TamañoPagina,
-    limit: TamañoPagina,
   });
 
   return res.json({ Items: rows, RegistrosTotal: count });
@@ -194,6 +190,48 @@ router.delete("/api/articulos/:id", async (req, res) => {
     }
   }
 });
+
+
+//------------------------------------
+//-- SEGURIDAD ---------------------------
+//------------------------------------
+router.get(
+  "/api/articulosJWT",
+  auth.authenticateJWT,
+  async function (req, res, next) {
+    /* #swagger.security = [{
+               "bearerAuth1": []
+        }] */
+
+    // #swagger.tags = ['Articulos']
+    // #swagger.summary = 'obtiene todos los Artículos, con seguridad JWT, solo para rol: admin (usuario:admin, clave:123)'
+    const { rol } = res.locals.user;
+    if (rol !== "admin") {
+      return res.status(403).json({ message: "usuario no autorizado!" });
+    }
+
+    let items = await db.articulos.findAll({
+      attributes: [
+        "IdArticulo",
+        "Nombre",
+        "Precio",
+        "CodigoDeBarra",
+        "IdArticuloFamilia",
+        "Stock",
+        "FechaAlta",
+        "Activo",
+      ],
+      order: [["Nombre", "ASC"]],
+    });
+    res.json(items);
+  }
+);
+
+// ---------------------------------------
+// ---------------------------------------
+
+
+
 module.exports = router;
 
 

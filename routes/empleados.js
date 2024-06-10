@@ -17,8 +17,6 @@ router.get("/api/empleados", async function (req, res, next) {
   if (req.query.Activo != undefined && req.query.Activo !== "") {
     where.Activo = req.query.Activo === "true";
   }
-  const Pagina = req.query.Pagina ?? 1;
-  const TamañoPagina = 10;
   const { count, rows } = await db.articulosEmpleados.findAndCountAll({
     attributes: [
       "IdEmpleado",
@@ -29,8 +27,7 @@ router.get("/api/empleados", async function (req, res, next) {
     ],
     order: [["Nombre", "ASC"]],
     where,
-    offset: (Pagina - 1) * TamañoPagina,
-    limit: TamañoPagina,
+
   });
 
   return res.json(rows);
