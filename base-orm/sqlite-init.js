@@ -76,39 +76,6 @@ async function CrearBaseSiNoExiste() {
     }
 
     // --------------------------------------------------------
-    // Definición empleados table
-    // --------------------------------------------------------
-
-    existe = false;
-    res = await db.get(
-      "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'empleados'",
-      []
-    );
-    if (res.contar > 0) existe = true;
-    if (!existe) {
-      await db.run(
-        `CREATE table empleados( 
-          IdEmpleado INTEGER PRIMARY KEY AUTOINCREMENT,
-          Nombre text NOT NULL CHECK(length(Nombre) >= 3 AND length(Nombre) <= 30),
-          Apellido text NOT NULL CHECK(length(Apellido) >= 3 AND length(Apellido) <= 30),
-          FechaAlta text NOT NULL,
-          Activo boolean
-        );`
-      );
-      console.log("tabla empleados creada!");
-      await db.run(
-        `insert into empleados (Nombre, Apellido, FechaAlta, Activo) values
-        ('Abi', 'Canal', '2001-01-01', 0),
-        ('Sara', 'Canaan', '2002-02-02', 1),
-        ('Mati', 'Gar', '2003-03-03', 0),
-        ('Matias', 'Garro', '2004-04-04', 1),
-        ('Lan', 'Puchee', '2005-05-05', 0),
-        ('Lanfranco', 'Puchetta', '2006-06-06', 1),
-        ('Yazmin', 'Canestra', '2010-10-10', 1);`
-      );
-    }
-
-    // --------------------------------------------------------
     // Definición comidas table
     // --------------------------------------------------------
 
@@ -143,6 +110,41 @@ async function CrearBaseSiNoExiste() {
       );
     }
 
+
+    // --------------------------------------------------------
+    // Definición empleados table
+    // --------------------------------------------------------
+
+    existe = false;
+    res = await db.get(
+      "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'empleados'",
+      []
+    );
+    if (res.contar > 0) existe = true;
+    if (!existe) {
+      await db.run(
+        `CREATE table empleados( 
+          IdEmpleado INTEGER PRIMARY KEY AUTOINCREMENT,
+          Nombre text NOT NULL CHECK(length(Nombre) >= 3 AND length(Nombre) <= 30),
+          Apellido text NOT NULL CHECK(length(Apellido) >= 3 AND length(Apellido) <= 30),
+          FechaAlta text NOT NULL,
+          Activo boolean
+        );`
+      );
+      console.log("tabla empleados creada!");
+      await db.run(
+        `insert into empleados (Nombre, Apellido, FechaAlta, Activo) values
+        ('Abi', 'Canal', '2001-01-01', 0),
+        ('Sara', 'Canaan', '2002-02-02', 1),
+        ('Mati', 'Gar', '2003-03-03', 0),
+        ('Matias', 'Garro', '2004-04-04', 1),
+        ('Lan', 'Puchee', '2005-05-05', 0),
+        ('Lanfranco', 'Puchetta', '2006-06-06', 1),
+        ('Yazmin', 'Canestra', '2010-10-10', 1);`
+      );
+    }
+
+
     // --------------------------------------------------------
     // Definición pedidos table
     // --------------------------------------------------------
@@ -159,8 +161,12 @@ async function CrearBaseSiNoExiste() {
           IdPedido INTEGER PRIMARY KEY AUTOINCREMENT,
           FechaAlta TEXT NOT NULL CHECK(trim(FechaAlta) == FechaAlta),
           Precio DECIMAL(10, 2) NOT NULL,
-          IdEmpleado INTEGER NOT NULL CHECK(trim(IdEmpleado) == IdEmpleado)
-        );`
+          IdEmpleado INTEGER NOT NULL,
+          FOREIGN KEY (IdEmpleado) REFERENCES empleados(IdEmpleado)
+        );
+        SELECT pedidos.id, pedidos.fecha, empleados.nombre
+        FROM pedidos
+        INNER JOIN empleado ON pedidos.IdEmpleado = empleado.IdEmpleado;`
       );
       console.log("tabla pedidos creada!");
       await db.run(
@@ -176,6 +182,8 @@ async function CrearBaseSiNoExiste() {
         ('02/10/2020', 10000.00, 2);`
       );
     }
+
+    
 
     // --------------------------------------------------------
     // Definición mesas table

@@ -326,6 +326,17 @@ const articulosMesas = sequelize.define(
         },
       },
     },
+    IdEmpleado: {
+      // todo evitar que string autocomplete con espacios en blanco, debería ser varchar sin espacios
+      type: DataTypes.INTEGER(),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Id Empleado es requerido",
+        },
+      },
+    },
   },
   {
     // pasar a mayusculas
