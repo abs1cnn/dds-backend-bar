@@ -76,7 +76,7 @@ async function CrearBaseSiNoExiste() {
     }
 
     // --------------------------------------------------------
-    // Definición comidas table
+    // Definición cartas table
     // --------------------------------------------------------
 
     let existeComidas = false;
@@ -109,7 +109,6 @@ async function CrearBaseSiNoExiste() {
         ('Pizza Peras Azules', 'Pizza con mozzarella, roquefort y peras.', 1050, 'Pizzas');`
       );
     }
-
 
     // --------------------------------------------------------
     // Definición empleados table
@@ -144,7 +143,6 @@ async function CrearBaseSiNoExiste() {
       );
     }
 
-
     // --------------------------------------------------------
     // Definición pedidos table
     // --------------------------------------------------------
@@ -163,10 +161,7 @@ async function CrearBaseSiNoExiste() {
           Precio DECIMAL(10, 2) NOT NULL,
           IdEmpleado INTEGER NOT NULL,
           FOREIGN KEY (IdEmpleado) REFERENCES empleados(IdEmpleado)
-        );
-        SELECT pedidos.id, pedidos.fecha, empleados.nombre
-        FROM pedidos
-        INNER JOIN empleado ON pedidos.IdEmpleado = empleado.IdEmpleado;`
+        );`
       );
       console.log("tabla pedidos creada!");
       await db.run(
@@ -174,16 +169,14 @@ async function CrearBaseSiNoExiste() {
         ('02/01/2020', 21000.00, 2),
         ('02/02/2020', 22000.00, 4),
         ('02/03/2020', 23000.00, 6),
-        ('02/04/2020', 31000.00, 8),
-        ('02/05/2020', 32000.00, 10),
-        ('02/06/2020', 33000.00, 1),
+        ('02/04/2020', 31000.00, 1),
+        ('02/05/2020', 32000.00, 5),
+        ('02/06/2020', 33000.00, 3),
         ('02/07/2020', 77000.00, 2),
-        ('02/08/2020', 88000.00, 3),
-        ('02/10/2020', 10000.00, 2);`
+        ('02/08/2020', 88000.00, 4),
+        ('02/10/2020', 10000.00, 6);`
       );
     }
-
-    
 
     // --------------------------------------------------------
     // Definición mesas table
@@ -220,15 +213,12 @@ async function CrearBaseSiNoExiste() {
       );
     }
     
-    // --------------------------------------------------
-    // --------------------------------------------------
     // Cerrar la base
     await db.close();
     console.log("Base de datos cerrada exitosamente");
   } catch (error) {
     console.error("Error durante la creación de la base de datos:", error.message);
   }
-  
 }
 
 CrearBaseSiNoExiste();
