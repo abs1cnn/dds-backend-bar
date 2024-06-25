@@ -3,6 +3,8 @@ const router = express.Router();
 const db = require("../base-orm/sequelize-init");
 const { Op, ValidationError } = require("sequelize");
 
+const { articulosMesas, articulosEmpleados } = db;
+
 router.get("/api/mesas", async function (req, res, next) {
   // #swagger.tags = ['Mesas']
   // #swagger.summary = 'obtiene todas las Mesas'
@@ -26,6 +28,13 @@ router.get("/api/mesas", async function (req, res, next) {
       "Capacidad",
       "Tipo",
       "Ocupada",
+      "IdEmpleado",
+    ],
+    include: [
+      {
+        model: articulosEmpleados,
+        attributes: ['Nombre', 'Apellido']
+      }
     ],
     order: [["Sector", "ASC"]],
     where,
@@ -45,6 +54,13 @@ router.get("/api/mesas/:id", async function (req, res, next) {
       "Capacidad",
       "Tipo",
       "Ocupada",
+      "IdEmpleado",
+    ],
+    include: [
+      {
+        model: articulosEmpleados,
+        attributes: ['Nombre', 'Apellido']
+      }
     ],
     where: { IdMesa: req.params.id },
   });
@@ -65,6 +81,7 @@ router.post("/api/mesas/", async (req, res) => {
       Capacidad: req.body.Capacidad,
       Tipo: req.body.Tipo,
       Ocupada: req.body.Ocupada,
+      IdEmpleado: req.body.IdEmpleado,
     });
     res.status(200).json(data.dataValues); // devolvemos el registro agregado!
   } catch (err) {
@@ -98,6 +115,7 @@ router.put("/api/mesas/:id", async (req, res) => {
         "Capacidad",
         "Tipo",
         "Ocupada",
+        "IdEmpleado",
       ],
       where: { IdMesa: req.params.id },
     });

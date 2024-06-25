@@ -362,6 +362,8 @@ const articulosPedidos = sequelize.define("articulosPedidos", {
 // Relaciones
 articulosPedidos.belongsTo(articulosEmpleados, { foreignKey: 'IdEmpleado' });
 
+// Relaciones
+articulosMesas.belongsTo(articulosEmpleados, { foreignKey: 'IdEmpleado' });
 
 
 module.exports = {
