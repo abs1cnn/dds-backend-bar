@@ -3,9 +3,13 @@
 const auth = require("../seguridad/auth");
 const express = require("express");
 const router = express.Router();
+
+//Para la interacciones de la base de datos
 const db = require("../base-orm/sequelize-init");
 const { Op, ValidationError } = require("sequelize");
 
+
+// Obtener todos los artículos con su filtro 
 router.get("/api/articulos", async function (req, res, next) {
   // #swagger.tags = ['Articulos']
   // #swagger.summary = 'obtiene todos los Articulos'
@@ -42,6 +46,8 @@ router.get("/api/articulos", async function (req, res, next) {
   return res.json({ Items: rows, RegistrosTotal: count });
 });
 
+
+// Recupera un único artículo 
 router.get("/api/articulos/:id", async function (req, res, next) {
   // #swagger.tags = ['Articulos']
   // #swagger.summary = 'obtiene un Articulo'
@@ -59,9 +65,11 @@ router.get("/api/articulos/:id", async function (req, res, next) {
     ],
     where: { IdArticulo: req.params.id },
   });
-  res.json(items);
+  res.json(items); //Respuesta un JSON que contiene los detalles del artículo recuperado.
 });
 
+
+// Crea un nuevo artículo basado en los datos enviados en el cuerpo de la solicitud.
 router.post("/api/articulos/", async (req, res) => {
   // #swagger.tags = ['Articulos']
   // #swagger.summary = 'agrega un Articulo'
@@ -94,6 +102,9 @@ router.post("/api/articulos/", async (req, res) => {
   }
 });
 
+
+// Actualiza un artículo existente en función del identificador proporcionado
+// y los datos enviados en el cuerpo de la solicitud.
 router.put("/api/articulos/:id", async (req, res) => {
   // #swagger.tags = ['Articulos']
   // #swagger.summary = 'actualiza un Artículo'
@@ -158,6 +169,7 @@ router.put("/api/articulos/:id", async (req, res) => {
   }
 });
 
+//  Eliminar un artículo
 router.delete("/api/articulos/:id", async (req, res) => {
   // #swagger.tags = ['Articulos']
   // #swagger.summary = 'elimina un Articulo'
@@ -166,14 +178,16 @@ router.delete("/api/articulos/:id", async (req, res) => {
   let bajaFisica = false;
 
   if (bajaFisica) {
-    // baja fisica
+
+    //  Baja Fisica Elimina permanentemente el artículo de la base de datos.
     let filasBorradas = await db.articulos.destroy({
       where: { IdArticulo: req.params.id },
     });
     if (filasBorradas == 1) res.sendStatus(200);
     else res.sendStatus(404);
   } else {
-    // baja lógica
+
+    // baja lógica, Actualiza la bandera del artículo para marcarlo como inactivo.
     try {
       let data = await db.sequelize.query(
         "UPDATE articulos SET Activo = case when Activo = 1 then 0 else 1 end WHERE IdArticulo = :IdArticulo",
@@ -186,7 +200,8 @@ router.delete("/api/articulos/:id", async (req, res) => {
       if (err instanceof ValidationError) {
         // si son errores de validación, los devolvemos
         const messages = err.errors.map((x) => x.message);
-        res.status(400).json(messages);
+        
+        res.status(400).json(messages); // ERROR 404 si no se encuentra el artículo.
       } else {
         // si son errores desconocidos, los dejamos que los controle el middleware de errores
         throw err;
@@ -196,9 +211,14 @@ router.delete("/api/articulos/:id", async (req, res) => {
 });
 
 
-//------------------------------------
-//-- SEGURIDAD ---------------------------
-//------------------------------------
+//--------------------------------------------------------------------------
+//-- SEGURIDAD (ACCESO SEGURO CON AUTENTIFICACION JWT).----------------------
+//---------------------------------------------------------------------------
+
+// Obtener todos los artículos con JWT
+
+// Requiere un token JWT válido en el encabezado de autorización para el acceso.
+// Recupera todos los artículos, pero restringe el acceso a los usuarios con el rol "admin".
 router.get(
   "/api/articulosJWT",
   auth.authenticateJWT,
@@ -235,7 +255,7 @@ router.get(
 // ---------------------------------------
 
 
-
+// Hace que las rutas definidas sean accesibles para su uso en otras partes de la aplicación.
 module.exports = router;
 
 

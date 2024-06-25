@@ -1,5 +1,20 @@
+
+
+//----------------------------------------------------------------------------------------------------------------------
+//***************************************MODELO DE SQLITE PARA UN ESQUEMA DE BASE DE DATOS**********************************/
+//------------------------------------------------------------------------------------------------------------------------------
+
+// Define una función asincrónica que tiene como objetivo crear una base de datos SQLite denominada 
+// y rellenarla con datos iniciales si aún no existe. 
+// --------------------------------------------------------------------------------------------------
+
+//Importa el  módulo, que proporciona las funciones necesarias para interactuar con la base de datos SQLite
 const db = require("aa-sqlite");
 
+//--------------------------------------------------------------------------------
+
+// Es una función asincrónica que utiliza promesas para controlar sus operaciones.
+// El cuerpo de la función contiene la lógica para crear la base de datos y rellenarla con datos
 async function CrearBaseSiNoExiste() {
   try {
     // Abrir base, si no existe el archivo/base lo crea
@@ -18,8 +33,10 @@ async function CrearBaseSiNoExiste() {
       "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'cartas'",
       []
     );
+
+    //Comprueba si la  tabla existe en la base de datos
     if (res.contar > 0) existeComidas = true;
-    if (!existeComidas) {
+    if (!existeComidas) {  //Si la tabla no exite la crea
       await db.run(
         `CREATE TABLE cartas (
           IdCarta INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -152,6 +169,7 @@ async function CrearBaseSiNoExiste() {
     // Cerrar la base
     await db.close();
     console.log("Base de datos cerrada exitosamente");
+    // Controlar cualquier error que pueda ocurrir durante la ejecución de la  función
   } catch (error) {
     console.error("Error durante la creación de la base de datos:", error.message);
   }
@@ -159,4 +177,5 @@ async function CrearBaseSiNoExiste() {
 
 CrearBaseSiNoExiste();
 
+// exporta la  función, haciéndola disponible para su uso en otros módulos o archivos
 module.exports = CrearBaseSiNoExiste;

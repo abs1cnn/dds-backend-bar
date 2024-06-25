@@ -1,17 +1,30 @@
+
+
+//***************************************MODELO DE SEQUELIZE PARA UN ESQUEMA DE BASE DE DATOS**********************************/
+//------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// Importa los objetos and del paquete
 const { Sequelize, DataTypes } = require("sequelize");
+// Crea una nueva instancia de Sequelize (), que representa la conexión a la base de datos.
 const sequelize = new Sequelize("sqlite:" + "./.data/pymes.db");
 
 // Definición del modelo articulosfamilias
+// EL 1er Argumento es el nombre de la Tabla en la Base de datos
+// El 2do Argumento es un objeto que especifica las columnas del modelo y sus atributos.
 const articulosfamilias = sequelize.define("articulosfamilias", {
+
+  //Los objetos de la estructura del Modelo y como se define cada columna
   IdArticuloFamilia: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.INTEGER, 
     primaryKey: true,
     autoIncrement: true,
   },
   Nombre: {
     type: DataTypes.STRING(30),
     allowNull: false,
-    validate: {
+    validate: {  //contiene reglas de validación para la columna. Cada regla se define como una propiedad 
       notEmpty: {
         args: true,
         msg: "Nombre es requerido",
@@ -359,12 +372,16 @@ const articulosPedidos = sequelize.define("articulosPedidos", {
   timestamps: false,
 });
 
-// Relaciones
+// Relaciones.
+// belongsTo relación de uno a varios entre dos modelos en Sequelize.
+// Indica que un modelo (el modelo de "pertenencia") tiene una clave externa
+// que hace referencia a la clave principal del otro modelo (el modelo "primario")
 articulosPedidos.belongsTo(articulosEmpleados, { foreignKey: 'IdEmpleado' });
 
 // Relaciones
 articulosMesas.belongsTo(articulosEmpleados, { foreignKey: 'IdEmpleado' });
 
+//Esto significa que cada pedido está asociado a un empleado específico que lo manejó
 
 module.exports = {
   sequelize,

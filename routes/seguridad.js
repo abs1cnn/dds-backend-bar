@@ -1,8 +1,19 @@
+
+//--------------------------------------------------------------------------
+//-- SEGURIDAD (ACCESO SEGURO CON AUTENTIFICACION JWT).----------------------
+//---------------------------------------------------------------------------
+
+// Sistema de autenticación con tokens JSON Web (JWT) y tokens de refresco para una aplicación web.
+
+
+
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
-const auth = require("../seguridad/auth");
+const jwt = require("jsonwebtoken"); // ibrería para generar y verificar tokens JWT.
+const auth = require("../seguridad/auth"); // Contiene las configuraciones de autenticación, como secretos para los tokens.
 
+
+// Usuarios:
 const users = [
   {
     usuario: "admin",
@@ -15,8 +26,12 @@ const users = [
     rol: "member",
   },
 ];
+
+// Tokens de refresco:
+// Un array refreshTokens para almacenar los tokens de refresco emitidos durante el login exitoso de un usuario.
 let refreshTokens = [];
 
+// Permite el login de usuarios.
 router.post("/api/login", (req, res) => {
   // #swagger.tags = ['Seguridad']
   // #swagger.summary = 'Login de usuarios: admin:123(rol administrador), juan:123(rol miembro)'
@@ -54,6 +69,7 @@ router.post("/api/login", (req, res) => {
   }
 });
 
+// Permite el cierre de sesión de un usuario.
 router.post("/api/logout", (req, res) => {
   // #swagger.tags = ['Seguridad']
   // #swagger.summary = 'Logout: invalida el refresh token (no invalida el token actual!!!)'
@@ -70,6 +86,8 @@ router.post("/api/logout", (req, res) => {
   res.json({ message });
 });
 
+
+// Permite obtener un nuevo token de acceso.
 router.post("/api/token", (req, res) => {
   // #swagger.tags = ['Seguridad']
   // #swagger.summary = 'refresh token'

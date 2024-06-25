@@ -3,6 +3,9 @@ const router = express.Router();
 const db = require("../base-orm/sequelize-init");
 const { Op, ValidationError } = require("sequelize");
 
+// Utiliza Sequelize para interactuar con la base de datos.
+
+// Recupera todas las cartas con filtrado
 router.get("/api/cartas", async function (req, res, next) {
   // #swagger.tags = ['Cartas']
   // #swagger.summary = 'Obtiene todas las Cartas'
@@ -31,6 +34,8 @@ router.get("/api/cartas", async function (req, res, next) {
   return res.json(rows);
 });
 
+
+// Recupera una única carta basada en el identificador (id)
 router.get("/api/cartas/:id", async function (req, res, next) {
   // #swagger.tags = ['Cartas']
   // #swagger.summary = 'Obtiene una Carta'
@@ -45,9 +50,11 @@ router.get("/api/cartas/:id", async function (req, res, next) {
     ],
     where: { IdCarta: req.params.id },
   });
-  res.json(items);
+  res.json(items); // Devuelve un JSON que contiene los detalles de la carta recuperada
 });
 
+
+// Agrega una nueva carta.
 router.post("/api/cartas/", async (req, res) => {
   // #swagger.tags = ['Cartas']
   // #swagger.summary = 'Agrega una Carta'
@@ -77,6 +84,10 @@ router.post("/api/cartas/", async (req, res) => {
   }
 });
 
+
+// Actualiza una carta existente.
+// Busca la carta por su identificador.
+// Actualiza los campos de la carta con los valores del JSON recibido
 router.put("/api/cartas/:id", async (req, res) => {
   // #swagger.tags = ['Cartas']
   // #swagger.summary = 'Actualiza una Carta'
@@ -122,12 +133,14 @@ router.put("/api/cartas/:id", async (req, res) => {
   }
 });
 
+
+// Elimina una carta por su identificado
 router.delete("/api/cartas/:id", async (req, res) => {
   // #swagger.tags = ['Cartas']
   // #swagger.summary = 'Elimina una Carta'
   // #swagger.parameters['id'] = { description: 'Identificador de la Carta..' }
 
-  let bajaFisica = false;
+  let bajaFisica = false; // Elimina la carta permanentemente de la base de datos.
 
   if (bajaFisica) {
     // Baja física
@@ -137,7 +150,7 @@ router.delete("/api/cartas/:id", async (req, res) => {
     if (filasBorradas == 1) res.sendStatus(200);
     else res.sendStatus(404);
   } else {
-    // Baja lógica
+    // Baja lógica ,Cambia el estado de la carta a "inactivo" en la base de datos.
     try {
       let data = await db.sequelize.query(
         "UPDATE cartas SET Activo = case when Activo = 1 then 0 else 1 end WHERE IdCarta = :IdCarta",

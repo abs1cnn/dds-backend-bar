@@ -3,6 +3,9 @@ const jwt = require("jsonwebtoken");
 const accessTokenSecret = "youraccesstokensecret";
 const refreshTokenSecret = "yourrefreshtokensecrethere";
 
+//  implementa una función de middleware para la autenticación
+// mediante JSON Web Tokens (JWT) en un nodo.Aplicación JS, 
+// Verifica la validez de los tokens de acceso incluidos 
 const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
 

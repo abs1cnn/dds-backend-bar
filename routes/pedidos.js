@@ -1,3 +1,7 @@
+
+
+// Define un conjunto de rutas para gestionar pedidos en una aplicación web, 
+//con  información del empleado relacionado al pedido.
 const express = require("express");
 const router = express.Router();
 const db = require("../base-orm/sequelize-init");
@@ -25,6 +29,8 @@ async function getPedidosConEmpleados(where) {
   });
 }
 
+
+// Obtiene todos los pedidos con paginación y filtrado
 router.get("/api/pedidos", async function (req, res, next) {
   let where = {};
   if (req.query.FechaAlta != undefined && req.query.FechaAlta !== "") {
@@ -41,6 +47,7 @@ router.get("/api/pedidos", async function (req, res, next) {
   return res.json(rows);
 });
 
+// Obtiene un pedido específico por su identificador (id).
 router.get("/api/pedidos/:id", async function (req, res, next) {
   let item = await articulosPedidos.findOne({
     attributes: [
@@ -60,6 +67,7 @@ router.get("/api/pedidos/:id", async function (req, res, next) {
   res.json(item);
 });
 
+// Agrega un nuevo pedido.
 router.post("/api/pedidos/", async (req, res) => {
   try {
     let data = await articulosPedidos.create({
@@ -79,6 +87,7 @@ router.post("/api/pedidos/", async (req, res) => {
   }
 });
 
+// Actualiza un pedido existente.
 router.put("/api/pedidos/:id", async (req, res) => {
   try {
     let item = await articulosPedidos.findOne({
@@ -111,8 +120,11 @@ router.put("/api/pedidos/:id", async (req, res) => {
   }
 });
 
+// Elimina un pedido por su identificador (id).
 router.delete("/api/pedidos/:id", async (req, res) => {
-  let bajaFisica = false;
+
+  // un tipos de eliminación:
+  let bajaFisica = false;  //  Elimina el pedido permanentemente de la base de datos.
 
   if (bajaFisica) {
     let filasBorradas = await articulosPedidos.destroy({
